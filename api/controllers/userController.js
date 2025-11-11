@@ -146,20 +146,20 @@ const login = async (req, res, fromFunction = false) => {
 const changePassword = async (req, res) => {
   try {
     const { email } = req.user
-    const { oldPassword, newPassword } = req.body
+    const { old_password, new_password } = req.body
 
-    if (!oldPassword) {
+    if (!old_password) {
       return res.status(400).json({ error: 'Old password is required' })
     }
 
-    if (!newPassword || newPassword.length < 8) {
+    if (!new_password || new_password.length < 8) {
       return res.status(400).json({ error: 'New password must be at least 8 characters' })
     }
 
-    if (oldPassword === newPassword) {
+    if (old_password === new_password) {
       return res.status(400).json({ error: 'New password must be different' })
     }
-    const result = await userModel.changePassword(email, oldPassword, newPassword)
+    const result = await userModel.changePassword(email, old_password, new_password)
     if (result.error) {
       return res.status(400).json({ error: result.error })
     }
@@ -174,17 +174,17 @@ const changePassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   try {
     const { email, authType } = req.user
-    const { newPassword } = req.body
+    const { new_password } = req.body
 
     if (authType != 'email') {
       throw new Error('Invalid authType')
     }
 
-    if (!newPassword || newPassword.length < 8) {
+    if (!new_password || new_password.length < 8) {
       return res.status(400).json({ error: 'New password must be at least 8 characters' })
     }
 
-    const result = await userModel.changePassword(email, '', newPassword, 'email')
+    const result = await userModel.changePassword(email, '', new_password, 'email')
     if (result.error) {
       return res.status(400).json({ error: result.error })
     }
