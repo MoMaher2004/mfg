@@ -324,9 +324,9 @@ const deleteProduct = async (req, res) => {
     if (isNaN(id) || id <= 0) {
       return res.status(400).json({ error: 'Valid product ID is required' })
     }
-    const res = await productModel.deleteProduct(id)
-    for (const file of res['media']) {
-      const filePath = path.join(__dirname, '../../media/products/', file)
+    const row = await productModel.deleteProduct(id)
+    for (const file of row.media) {
+      const filePath = path.join(__dirname, '../../media/products/', file['file_name'])
       await fs.unlink(filePath)
     }
     return res.status(200).json({ success: 'Product was deleted successfully' })

@@ -1,5 +1,6 @@
 const orderModel = require('../models/orderModel')
 const joi = require('joi')
+const { sendEmail } = require('../utils/sendEmail')
 
 const makeOrder = async (req, res) => {
   try {
@@ -90,6 +91,164 @@ const makeOrder = async (req, res) => {
     if (order.error) {
       return res.status(400).json(order)
     }
+    
+    try {
+      await sendEmail(process.env.COMPANY_EMAIL, 'MFG', 'Order notification', `
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+        .order-details {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .order-details h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .field-group {
+            margin-bottom: 15px;
+        }
+        .field-label {
+            font-weight: bold;
+            display: inline-block;
+            width: 180px;
+        }
+        .field-value {
+            display: inline-block;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="${process.env.LOGO_URL}" alt="Website Logo" class="logo">
+        <h1>Order Confirmation</h1>
+    </div>
+    
+    <div class="order-details">
+        <h2>Order Information</h2>
+        
+        <div class="field-group">
+            <span class="field-label">Order ID:</span>
+            <span class="field-value">${order.order.id}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Name:</span>
+            <span class="field-value">${order.order.name}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Government:</span>
+            <span class="field-value">${order.order.government}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">City:</span>
+            <span class="field-value">${order.order.city}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Address:</span>
+            <span class="field-value">${order.order.address}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Notes:</span>
+            <span class="field-value">${order.order.notes}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Phone:</span>
+            <span class="field-value">${order.order.phone}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Second Phone:</span>
+            <span class="field-value">${order.order.second_phone}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Used Coupon:</span>
+            <span class="field-value">${order.order.coupon}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Discount:</span>
+            <span class="field-value">${order.order.discount * 100}%</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Total Products Price:</span>
+            <span class="field-value">${order.order.total_products_price}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Total Products Price After Discount:</span>
+            <span class="field-value">${order.order.total_products_price * (1 - order.order.discount)}</span>
+        </div>
+        
+        <div class="field-group">
+            <span class="field-label">Delivery Price:</span>
+            <span class="field-value">${order.order.delivery_price}</span>
+        </div>
+        
+        <div class="field-group">
+            <h3 class="field-label">Deposit:</h3>
+            <h3 class="field-value">${order.order.total_deposite}</h3>
+        </div>
+        
+        <div class="field-group">
+            <h3 class="field-label">Collection Amount After Deposite:</h3>
+            <h3 class="field-value">${parseFloat(order.order.delivery_price) + parseFloat(order.order.total_products_price) * (1 - parseFloat(order.order.discount)) - parseFloat(order.order.total_deposite)}</h3>
+        </div>
+    </div>
+    
+    <div style="text-align: center;">
+        <a href="${process.env.PROTOCOL}://${process.env.URL}/orders/${order.order.id}" class="button">View Order Details</a>
+    </div>
+    
+</body>
+</html>
+        `)
+    } catch (error) {}
 
     return res.status(200).json(order)
   } catch (error) {

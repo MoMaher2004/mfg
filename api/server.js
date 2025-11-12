@@ -10,7 +10,9 @@ const categoryRoute = require('./routes/categoryRoute')
 const subCategoryRoute = require('./routes/subCategoryRoute')
 const orderRoute = require('./routes/orderRoute')
 const settingRoute = require('./routes/settingRoute')
+const offerRoute = require('./routes/offerRoute')
 const exportRoutes = require('./routes/exportRoute')
+const reviewRoute = require('./routes/reviewRoute')
 const cors = require('cors')
 const fs = require('fs')
 // const helmet = require('helmet')
@@ -64,6 +66,9 @@ if (!fs.existsSync(path.join(uploadDir, 'categories'))) {
 if (!fs.existsSync(path.join(uploadDir, 'subCategories'))) {
   fs.mkdirSync(path.join(uploadDir, 'subCategories'))
 }
+if (!fs.existsSync(path.join(uploadDir, 'offers'))) {
+  fs.mkdirSync(path.join(uploadDir, 'offers'))
+}
 
 // app.use(
 //   cors({
@@ -88,6 +93,8 @@ app.use('/api/subCategory', subCategoryRoute)
 app.use('/api/product', productRoute)
 app.use('/api/order', orderRoute)
 app.use('/api/coupon', couponRoute)
+app.use('/api/offer', offerRoute)
+app.use('/api/review', reviewRoute)
 app.use('/api/exportDb', exportRoutes)
 app.use('/health', (req, res) => {
   return res.status(200).json({ msg: 'hi! server is working' })

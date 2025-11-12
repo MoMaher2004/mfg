@@ -360,21 +360,19 @@ const editProduct = async (
 }
 
 const deleteProduct = async (id) => {
-  const transactionConn = await conn.getConnection()
   try {
-    await transactionConn.beginTransaction()
-    const { rows, rowCount } = await transactionConn.query(
-      `UPDATE public.products SET is_deleted = 1 WHERE id = $1 AND is_deleted = false RETURNING *`,
+    const {rows: media} = await conn.query(`DELETE FROM product_media WHERE product_id = $1 RETURNING file_name`, [id])
+    let { rows, rowCount } = await conn.query(
+      `UPDATE public.products SET is_deleted = true WHERE id = $1 AND is_deleted = false RETURNING *`,
       [id],
     )
     if (rowCount === 0) {
       throw new Error('Something went wrong')
     }
-    await transactionConn.commit()
+    rows[0].media = media
     return rows[0]
   } catch (error) {
     console.error('Error during deleteProduct:', error)
-    await transactionConn.rollback()
     throw new Error('Something went wrong')
   }
 }

@@ -242,7 +242,7 @@ const sendResetPasswordToken = async (req, res) => {
           <table width="400" cellpadding="20" cellspacing="0" border="0" style="background-color:#ffffff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
             <tr>
               <td align="center" style="padding-bottom:10px;">
-                <img src="${process.env.URL}/assets/logo-mqR8tA3L.png" alt="New Capital Logo" width="150" height="50" style="display:block;" />
+                <img src="${process.env.LOGO_URL}" alt="New Capital Logo" width="150" height="50" style="display:block;" />
               </td>
             </tr>
             <tr>
