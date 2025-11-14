@@ -86,7 +86,8 @@ const makeOrder = async (req, res) => {
       value.second_phone,
       value.notes,
       value.coupon,
-      value.items
+      value.items,
+      req.ip
     )
     if (order.error) {
       return res.status(400).json(order)

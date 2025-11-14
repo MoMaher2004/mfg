@@ -14,7 +14,8 @@ const makeOrder = async (
   second_phone = null,
   notes = null,
   coupon = null,
-  items
+  items,
+  ip
 ) => {
   ;`[{
         product_id: 4,
@@ -91,6 +92,13 @@ const makeOrder = async (
     if (lowAmounts.length > 0) {
       await conn.query('ROLLBACK')
       return { error: 'Insufficient amounts', lowAmounts }
+    }
+    if (coupon && coupon != null && coupon != undefined && coupon != '') {
+      const {rows: ipCoupRes} = await conn.query(`SELECT created_at FROM orders WHERE order_ip = $1 AND coupon = $2`, [ip, coupon])
+      if(ipCoupRes.length > 0){
+        await conn.query('ROLLBACK')
+        return { error: `Coupon is used before` }
+      }
     }
     // add order
     const { rows: addOrderRes } = await conn.query(

@@ -99,7 +99,7 @@ app.use('/api/review', reviewRoute)
 app.use('/api/customOrder', customOrderRoute)
 app.use('/api/exportDb', exportRoutes)
 app.use('/health', (req, res) => {
-  return res.status(200).json({ msg: 'hi! server is working' })
+  return res.status(200).json({ msg: 'hi! server is working', ip: req.ip })
 })
 
 const port = process.env.PORT || 3000

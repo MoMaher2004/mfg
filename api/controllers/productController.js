@@ -362,7 +362,7 @@ const uploadMedia = async (req, res) => {
 
 const deleteMedia = async (req, res) => {
   try {
-    const fileName = req.params.MediaName
+    const fileName = req.params.fileName
     const result = await productModel.deleteMedia(fileName)
     if (result.error) {
       return res.status(400).json({ error: result.error })
