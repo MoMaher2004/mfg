@@ -212,32 +212,32 @@ const makeOrder = async (req, res) => {
         
         <div class="field-group">
             <span class="field-label">Discount:</span>
-            <span class="field-value">${order.order.discount * 100}%</span>
+            <span class="field-value">${(order.order.discount * 100).toFixed(2)}%</span>
         </div>
         
         <div class="field-group">
             <span class="field-label">Total Products Price:</span>
-            <span class="field-value">${order.order.total_products_price}</span>
+            <span class="field-value">${(parseFloat(order.order.total_products_price)).toFixed(2)}</span>
         </div>
         
         <div class="field-group">
             <span class="field-label">Total Products Price After Discount:</span>
-            <span class="field-value">${order.order.total_products_price * (1 - order.order.discount)}</span>
+            <span class="field-value">${((parseFloat(order.order.total_products_price * (1 - order.order.discount)))).toFixed(2)}</span>
         </div>
         
         <div class="field-group">
             <span class="field-label">Delivery Price:</span>
-            <span class="field-value">${order.order.delivery_price}</span>
+            <span class="field-value">${(parseFloat(order.order.delivery_price)).toFixed(2)}</span>
         </div>
         
         <div class="field-group">
-            <h3 class="field-label">Deposit:</h3>
-            <h3 class="field-value">${order.order.total_deposite}</h3>
+            <h1 class="field-label">Deposit:</h1>
+            <h1 class="field-value">${(parseFloat(order.order.total_deposite)).toFixed(2)}</h1>
         </div>
         
         <div class="field-group">
-            <h3 class="field-label">Collection Amount After Deposite:</h3>
-            <h3 class="field-value">${parseFloat(order.order.delivery_price) + parseFloat(order.order.total_products_price) * (1 - parseFloat(order.order.discount)) - parseFloat(order.order.total_deposite)}</h3>
+            <h1 class="field-label">Collection Amount After Deposite:</h1>
+            <h1 class="field-value">${(parseFloat(order.order.delivery_price) + parseFloat(order.order.total_products_price) * (1 - parseFloat(order.order.discount)) - parseFloat(order.order.total_deposite)).toFixed(2)}</h1>
         </div>
     </div>
     
@@ -248,7 +248,9 @@ const makeOrder = async (req, res) => {
 </body>
 </html>
         `)
-    } catch (error) {}
+    } catch (error) {
+      console.error(error)
+    }
 
     return res.status(200).json(order)
   } catch (error) {
