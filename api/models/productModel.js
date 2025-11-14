@@ -128,6 +128,8 @@ const getProductsList = async (
     p.ar_name, 
     p.brand, 
     p.ar_brand,
+    p.warranty, 
+    p.ar_warranty, 
     p.description, 
     p.ar_description, 
     p.price, 
